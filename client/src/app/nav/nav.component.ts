@@ -43,7 +43,7 @@ export class NavComponent implements OnInit {
           //console.log(response);
           // this.loogedIn = true;
         ,
-        error:error=>this.toastr.error(error.error)
+       // error:error=>this.toastr.error(error.error)
       });
   }
 
