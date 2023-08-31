@@ -9,6 +9,9 @@ import { authGuard } from './_guards/auth.guard';
 import { TestErrorComponent } from './errors/test-error/test-error.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorsComponent } from './errors/server-errors/server-errors.component';
+import { MemberEditComponent } from './members/member-edit/member-edit.component';
+import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.guard';
+
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -19,14 +22,15 @@ const routes: Routes = [
     children: [
       { path: 'members', component: MemberListComponent, canActivate: [authGuard] },
       { path: 'members/:username', component: MemberDetailComponent },
+      { path: 'member/edit', component: MemberEditComponent,canDeactivate:[preventUnsavedChangesGuard]  },
       { path: 'lists', component: ListsComponent },
       { path: 'messages', component: MessagesComponent }
     ]
 
   },
-  {path:'errors',component:TestErrorComponent},
-  {path:'not-found',component:NotFoundComponent},
-  {path:'server-error',component:ServerErrorsComponent},
+  { path: 'errors', component: TestErrorComponent },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: 'server-error', component: ServerErrorsComponent },
   { path: '**', component: NotFoundComponent, pathMatch: 'full' }
 
 ];
