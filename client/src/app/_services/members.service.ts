@@ -19,7 +19,6 @@ export class MembersService {
 
   getMembers() {
     if (this.member.length > 0) return of(this.member);
-
     return this.http.get<Member[]>(this.baseUrl + 'users').pipe(
       map(member => {
         this.member = member;
