@@ -22,6 +22,12 @@ namespace API.Data
             _Context = context;
 
         }
+
+        public void AddGroup(Group group)
+        {
+            _Context.Groups.Add(group);
+        }
+
         public void AddMessage(Message message)
         {
             _Context.Messages.Add(message);
@@ -30,6 +36,16 @@ namespace API.Data
         public void DeleteMessage(Message message)
         {
             _Context.Messages.Remove(message);
+        }
+
+        public async Task<Connection> GetConnection(string connectionId)
+        {
+            return await _Context.Connections.FindAsync(connectionId);
+        }
+
+        public async Task<Group> GetGroupForConnection(string connectionId)
+        {
+            return await _Context.Groups.Include(x => x.Connections).Where(x => x.Connections.Any(c => c.ConnectionId == connectionId)).FirstOrDefaultAsync();
         }
 
         public async Task<Message> GetMessage(int id)
@@ -53,15 +69,20 @@ namespace API.Data
             return await PagedList<MessageDto>.CreateAsync(message, messageParams.PageNumber, messageParams.PageSize);
         }
 
+        public async Task<Group> GetMessageGroup(string groupName)
+        {
+            return await _Context.Groups.Include(x => x.Connections).FirstOrDefaultAsync(x => x.Name == groupName);
+        }
+
         public async Task<IEnumerable<MessageDto>> GetMessageThread(string currentUserName, string recipientUserName)
         {
             var messages = await _Context.Messages
                 .Include(u => u.Sender).ThenInclude(p => p.Photos)
                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
                 .Where(
-                    m => m.RecipientUsername == currentUserName && m.RecipientDeleted ==false
+                    m => m.RecipientUsername == currentUserName && m.RecipientDeleted == false
                      && m.SenderUsername == recipientUserName ||
-                     m.RecipientUsername == recipientUserName && m.SenderDeleted ==false &&
+                     m.RecipientUsername == recipientUserName && m.SenderDeleted == false &&
                      m.SenderUsername == currentUserName
                 )
                 .OrderBy(m => m.MessageSent)
@@ -83,6 +104,11 @@ namespace API.Data
             return _mapper.Map<IEnumerable<MessageDto>>(messages);
 
 
+        }
+
+        public void RemoveConnection(Connection connection)
+        {
+            _Context.Connections.Remove(connection);
         }
 
         public async Task<bool> SaveAllAsync()
