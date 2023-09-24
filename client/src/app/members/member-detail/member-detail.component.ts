@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
 import { TabDirective, TabsModule, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { TimeagoModule } from 'ngx-timeago';
 import { Member } from 'src/app/_models/member';
 import { MembersService } from 'src/app/_services/members.service';
-import { MemberMessagesComponent } from '../member-messages/MemberMessagesComponent';
+import { MemberMessagesComponent } from '../member-messages/member-messagesComponent';
 import { MessageService } from 'src/app/_services/message.service';
 import { Message } from 'src/app/_models/message';
 import { PresenceService } from 'src/app/_services/presence.service';
@@ -15,6 +15,7 @@ import { User } from 'src/app/_models/user';
 import { take } from 'rxjs';
 
 @Component({
+  changeDetection:ChangeDetectionStrategy.OnPush,
   selector: 'app-member-detail',
   standalone: true,
   templateUrl: './member-detail.component.html',

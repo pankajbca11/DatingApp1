@@ -37,14 +37,12 @@ export class NavComponent implements OnInit {
 
   login(){
     
-    this.accountService.login(this.model).subscribe(
-      {
-        next: _ =>this.router.navigateByUrl('/members')
-          //console.log(response);
-          // this.loogedIn = true;
-        ,
-       // error:error=>this.toastr.error(error.error)
-      });
+   this.accountService.login(this.model).subscribe({
+    next:_ =>{
+      this.router.navigateByUrl('/members');
+      this.model={};
+    }
+   })
   }
 
   logout(){
